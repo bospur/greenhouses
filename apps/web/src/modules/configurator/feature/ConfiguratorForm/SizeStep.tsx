@@ -1,11 +1,10 @@
 import type { GreenhouseShape, ProductDimensions } from '@/data/repositories/catalog';
 import { GreenhouseIllustration, SHAPE_LABELS } from '@/modules/catalog';
-import { Stepper } from '@/shared/ui';
+import { ChoiceCard, Stepper } from '@/shared/ui';
 import { formatMeters, pluralize } from '@/shared/utils';
 import { LENGTH_RANGE, SHAPE_DESCRIPTIONS, SHAPE_LIMITS, SHAPE_ORDER, getRangeValues } from '../../domain';
 import { ChoiceChips } from './ChoiceChips';
 import { ConfigStep, Field } from './ConfigStep';
-import { OptionCard } from './OptionCard';
 import type { ConfiguratorFormLogic } from './useLogic';
 import controls from './controls.module.css';
 
@@ -29,8 +28,9 @@ export function SizeStep({ logic }: { logic: ConfiguratorFormLogic }) {
       <Field label="Форма">
         <div className={controls.shapeGrid} role="radiogroup" aria-label="Форма теплицы">
           {SHAPE_ORDER.map((shape) => (
-            <OptionCard
+            <ChoiceCard
               key={shape}
+              size="sm"
               type="radio"
               name="shape"
               checked={config.shape === shape}
@@ -43,8 +43,17 @@ export function SizeStep({ logic }: { logic: ConfiguratorFormLogic }) {
         </div>
       </Field>
 
-      <Field label="Ширина" hint={`Для этой формы — от ${formatMeters(limits.width.min)} до ${formatMeters(limits.width.max)}`}>
-        <ChoiceChips name="width" label="Ширина" options={widthOptions} value={config.widthM} onChange={logic.setWidth} />
+      <Field
+        label="Ширина"
+        hint={`Для этой формы — от ${formatMeters(limits.width.min)} до ${formatMeters(limits.width.max)}`}
+      >
+        <ChoiceChips
+          name="width"
+          label="Ширина"
+          options={widthOptions}
+          value={config.widthM}
+          onChange={logic.setWidth}
+        />
       </Field>
 
       <div className={controls.row}>
@@ -65,7 +74,11 @@ export function SizeStep({ logic }: { logic: ConfiguratorFormLogic }) {
           />
         </Field>
 
-        <Field label="Высота в коньке" htmlFor={HEIGHT_ID} hint={`${formatMeters(limits.height.min)} — ${formatMeters(limits.height.max)}`}>
+        <Field
+          label="Высота в коньке"
+          htmlFor={HEIGHT_ID}
+          hint={`${formatMeters(limits.height.min)} — ${formatMeters(limits.height.max)}`}
+        >
           <div className={controls.range}>
             <input
               id={HEIGHT_ID}

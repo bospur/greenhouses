@@ -1,13 +1,11 @@
 import { Controller } from 'react-hook-form';
 import { COMPANY } from '@/shared/constants';
-import { ErrorState, FormField, Icon, Input, Skeleton } from '@/shared/ui';
+import { ChoiceCard, ErrorState, FormField, Icon, Input, Skeleton } from '@/shared/ui';
 import { formatPrice } from '@/shared/utils';
 import { DELIVERY_SERVICE_LABELS, formatEta } from '../../domain';
 import { CityField } from '../CityField';
 import { CheckoutSection } from './CheckoutSection';
-import { ChoiceCard } from './ChoiceCard';
 import type { CheckoutFormLogic } from './useLogic';
-import choice from './choice.module.css';
 import styles from './CheckoutForm.module.css';
 
 const ADDRESS_ID = 'checkout-address';
@@ -38,7 +36,7 @@ export function DeliveryStep({ logic }: { logic: CheckoutFormLogic }) {
         <div className={styles.group} role="radiogroup" aria-label="Способ доставки" aria-busy={logic.isQuotesLoading}>
           <span className={styles.groupLabel}>Способ доставки</span>
           {logic.isQuotesLoading ? (
-            <div className={choice.list}>
+            <div className={styles.choiceList}>
               {[0, 1, 2].map((i) => (
                 <Skeleton key={i} height={64} radius={12} />
               ))}
@@ -51,7 +49,7 @@ export function DeliveryStep({ logic }: { logic: CheckoutFormLogic }) {
               Транспортные компании не возят в этот город. Позвоните нам — подберём вариант: {COMPANY.phone}
             </p>
           ) : (
-            <div className={choice.list}>
+            <div className={styles.choiceList}>
               {logic.quotes.map((q) => (
                 <ChoiceCard
                   key={q.id}
@@ -93,7 +91,8 @@ export function DeliveryStep({ logic }: { logic: CheckoutFormLogic }) {
       {selectedQuote?.service === 'terminal' && (
         <p className={styles.info}>
           <Icon name="mapPin" size={16} />
-          Заберёте груз в терминале «{selectedQuote.carrierName}» в г. {values.city?.name}. Адрес терминала пришлём в SMS.
+          Заберёте груз в терминале «{selectedQuote.carrierName}» в г. {values.city?.name}. Адрес терминала пришлём в
+          SMS.
         </p>
       )}
       {selectedQuote?.service === 'pickup' && (

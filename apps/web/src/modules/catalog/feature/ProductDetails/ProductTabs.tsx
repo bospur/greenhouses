@@ -23,7 +23,13 @@ export function ProductTabs({ product, specRows, activeTab, onTabChange, onPhoto
 
   return (
     <section className={styles.section}>
-      <Tabs items={PRODUCT_TABS} value={activeTab} onChange={onTabChange} idPrefix={ID_PREFIX} label="Информация о модели" />
+      <Tabs
+        items={PRODUCT_TABS}
+        value={activeTab}
+        onChange={onTabChange}
+        idPrefix={ID_PREFIX}
+        label="Информация о модели"
+      />
 
       <div id={panelId} role="tabpanel" aria-labelledby={tabId} tabIndex={0} className={styles.panel}>
         {activeTab === 'specs' && (

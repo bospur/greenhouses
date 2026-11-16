@@ -1,5 +1,10 @@
 import { isAxiosError } from 'axios';
-import { fetchProduct, fetchProducts, type ProductNetworkDTO, type ProductsQueryParams } from '@/data/source/catalogSource';
+import {
+  fetchProduct,
+  fetchProducts,
+  type ProductNetworkDTO,
+  type ProductsQueryParams,
+} from '@/data/source/catalogSource';
 import { MockNotFoundError } from '@/data/source/mock/mockRequest';
 import { NotFoundError } from '@/shared/utils';
 import type { ProductDTO } from './dto';

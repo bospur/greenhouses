@@ -24,7 +24,8 @@ export type OrderItemSummary = {
 };
 
 const num = (v: number) => v.toLocaleString('ru-RU', { maximumFractionDigits: 2 });
-const formatSize = ({ widthM, lengthM, heightM }: ProductDimensions) => `${num(widthM)}×${num(lengthM)}×${num(heightM)} м`;
+const formatSize = ({ widthM, lengthM, heightM }: ProductDimensions) =>
+  `${num(widthM)}×${num(lengthM)}×${num(heightM)} м`;
 
 export function summarizeProduct(product: ProductDTO): OrderItemSummary {
   return {

@@ -67,6 +67,8 @@ svg {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    /* иначе бесконечные анимации (спиннер, скелетон) крутятся с той же 0.01ms — мелькают */
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }

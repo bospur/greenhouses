@@ -1,12 +1,14 @@
 import { Configurator } from '@/modules/configurator';
-import { COMPANY } from '@/shared/constants';
-import { Container, SectionHeading } from '@/shared/ui';
+import { Container, PageMeta, SectionHeading } from '@/shared/ui';
 import styles from './ConfiguratorScreen.module.css';
 
 export function ConfiguratorScreen() {
   return (
     <Container className={styles.page}>
-      <title>{`Конфигуратор теплицы — ${COMPANY.name}`}</title>
+      <PageMeta
+        title="Конфигуратор теплицы"
+        description="Соберите теплицу по своим размерам: форма, каркас, поликарбонат, двери и форточки. Чертёж и цена обновляются сразу."
+      />
       <SectionHeading
         as="h1"
         tag="Конфигуратор"

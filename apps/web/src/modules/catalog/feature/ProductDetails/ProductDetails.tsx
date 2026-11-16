@@ -1,5 +1,5 @@
-import { APP_ROUTES, COMPANY } from '@/shared/constants';
-import { Breadcrumbs, ErrorState } from '@/shared/ui';
+import { APP_ROUTES } from '@/shared/constants';
+import { Breadcrumbs, ErrorState, PageMeta } from '@/shared/ui';
 import { ProductDetailsSkeleton } from './ProductDetailsSkeleton';
 import { ProductGallery } from './ProductGallery';
 import { ProductNotFound } from './ProductNotFound';
@@ -29,7 +29,7 @@ export function ProductDetails({ slug }: ProductDetailsProps) {
 
   return (
     <>
-      <title>{`${fullName} — ${COMPANY.name}`}</title>
+      <PageMeta title={fullName} description={product.tagline} />
       <Breadcrumbs
         items={[
           { label: 'Главная', to: APP_ROUTES.home.path },

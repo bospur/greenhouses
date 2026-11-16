@@ -1,5 +1,5 @@
-import { APP_ROUTES, COMPANY } from '@/shared/constants';
-import { Button, SectionHeading } from '@/shared/ui';
+import { APP_ROUTES } from '@/shared/constants';
+import { Button, PageMeta, SectionHeading } from '@/shared/ui';
 import { GreenhouseIllustration } from '../GreenhouseIllustration';
 import styles from './ProductDetails.module.css';
 
@@ -8,7 +8,7 @@ const PLACEHOLDER_DIMENSIONS = { widthM: 3, lengthM: 4, heightM: 2.1 };
 export function ProductNotFound() {
   return (
     <div className={styles.notFound}>
-      <title>{`Модель не найдена — ${COMPANY.name}`}</title>
+      <PageMeta title="Модель не найдена" noIndex />
       <div className={styles.notFoundArt} aria-hidden="true">
         <GreenhouseIllustration shape="arch" dimensions={PLACEHOLDER_DIMENSIONS} />
       </div>

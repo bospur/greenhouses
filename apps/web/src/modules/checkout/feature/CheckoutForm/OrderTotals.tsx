@@ -48,8 +48,8 @@ export function OrderTotals({ logic }: { logic: CheckoutFormLogic }) {
         {!logic.isSubmitting && <Icon name="arrowRight" size={18} />}
       </Button>
       <p className={styles.note}>
-        Цена предварительная — менеджер подтвердит её звонком. Нажимая кнопку, вы соглашаетесь на обработку
-        персональных данных.
+        Цена предварительная — менеджер подтвердит её звонком. Нажимая кнопку, вы соглашаетесь на обработку персональных
+        данных.
       </p>
     </section>
   );

@@ -8,7 +8,12 @@ import type {
 /** Склад — Подольск (вопрос №1 к заказчику); расстояния по трассе, округлённо */
 type MockCity = CityNetworkDTO & { distanceKm: number };
 
-const city = (id: string, name: string, region: string, distanceKm: number): MockCity => ({ id, name, region, distanceKm });
+const city = (id: string, name: string, region: string, distanceKm: number): MockCity => ({
+  id,
+  name,
+  region,
+  distanceKm,
+});
 
 const CITIES: readonly MockCity[] = [
   city('moscow', 'Москва', 'Москва', 40),
@@ -89,11 +94,56 @@ type Tariff = {
 };
 
 const TARIFFS: readonly Tariff[] = [
-  { carrier: 'cdek', carrierName: 'СДЭК', service: 'door', baseRub: 900, perKgRub: 9, kmPerDay: 700, handlingDays: 1, maxDistanceKm: 5000 },
-  { carrier: 'cdek', carrierName: 'СДЭК', service: 'terminal', baseRub: 600, perKgRub: 7.5, kmPerDay: 700, handlingDays: 1, maxDistanceKm: 5000 },
-  { carrier: 'dellin', carrierName: 'Деловые Линии', service: 'door', baseRub: 1400, perKgRub: 6.5, kmPerDay: 550, handlingDays: 2, maxDistanceKm: 5000 },
-  { carrier: 'dellin', carrierName: 'Деловые Линии', service: 'terminal', baseRub: 700, perKgRub: 6, kmPerDay: 550, handlingDays: 2, maxDistanceKm: 5000 },
-  { carrier: 'pek', carrierName: 'ПЭК', service: 'terminal', baseRub: 650, perKgRub: 5.5, kmPerDay: 500, handlingDays: 2, maxDistanceKm: 3500 },
+  {
+    carrier: 'cdek',
+    carrierName: 'СДЭК',
+    service: 'door',
+    baseRub: 900,
+    perKgRub: 9,
+    kmPerDay: 700,
+    handlingDays: 1,
+    maxDistanceKm: 5000,
+  },
+  {
+    carrier: 'cdek',
+    carrierName: 'СДЭК',
+    service: 'terminal',
+    baseRub: 600,
+    perKgRub: 7.5,
+    kmPerDay: 700,
+    handlingDays: 1,
+    maxDistanceKm: 5000,
+  },
+  {
+    carrier: 'dellin',
+    carrierName: 'Деловые Линии',
+    service: 'door',
+    baseRub: 1400,
+    perKgRub: 6.5,
+    kmPerDay: 550,
+    handlingDays: 2,
+    maxDistanceKm: 5000,
+  },
+  {
+    carrier: 'dellin',
+    carrierName: 'Деловые Линии',
+    service: 'terminal',
+    baseRub: 700,
+    perKgRub: 6,
+    kmPerDay: 550,
+    handlingDays: 2,
+    maxDistanceKm: 5000,
+  },
+  {
+    carrier: 'pek',
+    carrierName: 'ПЭК',
+    service: 'terminal',
+    baseRub: 650,
+    perKgRub: 5.5,
+    kmPerDay: 500,
+    handlingDays: 2,
+    maxDistanceKm: 3500,
+  },
 ];
 
 const PICKUP_MAX_DISTANCE_KM = 120;

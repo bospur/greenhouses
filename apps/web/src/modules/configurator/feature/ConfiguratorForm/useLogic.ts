@@ -65,7 +65,8 @@ export function useConfiguratorFormLogic(initial: GreenhouseConfig) {
     setLength: (lengthM: number) => update('size', { lengthM }),
     setHeight: (heightM: number) => update('size', { heightM }),
     setFrame: (frame: GreenhouseConfig['frame']) => update('materials', { frame }),
-    setPolycarbonate: (polycarbonateMm: GreenhouseConfig['polycarbonateMm']) => update('materials', { polycarbonateMm }),
+    setPolycarbonate: (polycarbonateMm: GreenhouseConfig['polycarbonateMm']) =>
+      update('materials', { polycarbonateMm }),
     setDoors: (doors: GreenhouseConfig['doors']) => update('openings', { doors }),
     setVents: (vents: number) => update('openings', { vents }),
     toggleOption: (id: GreenhouseConfig['options'][number]) =>

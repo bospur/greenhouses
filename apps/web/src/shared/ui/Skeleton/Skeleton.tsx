@@ -9,5 +9,11 @@ type SkeletonProps = {
 };
 
 export function Skeleton({ height = 16, width = '100%', radius = 8, className }: SkeletonProps) {
-  return <div className={cn(styles.skeleton, className)} style={{ height, width, borderRadius: radius }} aria-hidden="true" />;
+  return (
+    <div
+      className={cn(styles.skeleton, className)}
+      style={{ height, width, borderRadius: radius }}
+      aria-hidden="true"
+    />
+  );
 }

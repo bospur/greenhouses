@@ -11,7 +11,14 @@ type SectionHeadingProps = {
   className?: string;
 };
 
-export function SectionHeading({ tag, title, subtitle, align = 'left', as: Heading = 'h2', className }: SectionHeadingProps) {
+export function SectionHeading({
+  tag,
+  title,
+  subtitle,
+  align = 'left',
+  as: Heading = 'h2',
+  className,
+}: SectionHeadingProps) {
   return (
     <div className={cn(styles.heading, align === 'center' && styles.center, className)}>
       {tag && <span className={styles.tag}>{tag}</span>}

@@ -1,0 +1,10 @@
+node_modules
+dist
+coverage
+package-lock.json
+# исходные прототипы — референс, не код проекта
+*.html
+!apps/web/index.html
+docs
+FRONTEND_ARCHITECTURE_GUIDE.md
+README.md

@@ -9,7 +9,12 @@ export function Checkout() {
 
   switch (view.status) {
     case 'empty':
-      return <EmptyCheckout title="Вы ещё не выбрали теплицу" text="Возьмите готовую модель из каталога или соберите свою." />;
+      return (
+        <EmptyCheckout
+          title="Вы ещё не выбрали теплицу"
+          text="Возьмите готовую модель из каталога или соберите свою."
+        />
+      );
     case 'notFound':
       return (
         <EmptyCheckout

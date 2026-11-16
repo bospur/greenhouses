@@ -20,7 +20,10 @@ export function ChoiceChips<T extends string | number>({ name, label, options, v
   return (
     <div className={styles.chips} role="radiogroup" aria-label={label}>
       {options.map((o) => (
-        <label key={o.value} className={cn(styles.chip, o.value === value && styles.chipActive, o.disabled && styles.disabled)}>
+        <label
+          key={o.value}
+          className={cn(styles.chip, o.value === value && styles.chipActive, o.disabled && styles.disabled)}
+        >
           <input
             type="radio"
             name={name}

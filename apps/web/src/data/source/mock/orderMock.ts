@@ -32,7 +32,10 @@ function resolveGoods(body: CreateOrderNetworkDTO): { title: string; goodsRub: n
   const product = CATALOG_MOCK.find((p) => p.slug === slug);
   if (!product) throw new Error('Модель снята с продажи — выберите другую');
   const size = (mm: number) => (mm / 1000).toLocaleString('ru-RU');
-  return { title: `«${product.name}» ${size(product.widthMm)}×${size(product.lengthMm)} м`, goodsRub: product.priceRub };
+  return {
+    title: `«${product.name}» ${size(product.widthMm)}×${size(product.lengthMm)} м`,
+    goodsRub: product.priceRub,
+  };
 }
 
 export function createMockOrder(body: CreateOrderNetworkDTO): OrderNetworkDTO {

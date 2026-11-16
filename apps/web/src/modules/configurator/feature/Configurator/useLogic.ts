@@ -23,11 +23,7 @@ export function useConfiguratorLogic() {
   return {
     isLoading: Boolean(fromSlug) && isPending,
     /** форма пересоздаётся при смене исходной модели или конфигурации из адреса */
-    formKey: base
-      ? `from-${product?.slug}`
-      : fromUrl
-        ? `url-${toConfigSearchParams(fromUrl).toString()}`
-        : 'default',
+    formKey: base ? `from-${product?.slug}` : fromUrl ? `url-${toConfigSearchParams(fromUrl).toString()}` : 'default',
     initial: base?.config ?? fromUrl ?? DEFAULT_CONFIG,
     baseLabel: base?.label,
     fallbackNotice:

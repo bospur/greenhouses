@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import type { OrderDTO } from '@/data/repositories/orders';
 import { APP_ROUTES, COMPANY } from '@/shared/constants';
-import { Button, ErrorState, Icon, Skeleton } from '@/shared/ui';
+import { Button, ErrorState, Icon, PageMeta, Skeleton } from '@/shared/ui';
 import { cn, formatDateTime, formatPrice } from '@/shared/utils';
 import {
   DELIVERY_SERVICE_LABELS,
@@ -34,7 +34,7 @@ export function OrderStatus({ orderId }: { orderId: string | undefined }) {
 
   return (
     <div className={styles.page}>
-      <title>{`Заказ № ${order.number} — ${COMPANY.name}`}</title>
+      <PageMeta title={`Заказ № ${order.number}`} noIndex />
       <header className={styles.header}>
         <div>
           <h1 className={styles.title}>Заказ № {order.number}</h1>
@@ -168,7 +168,7 @@ function OrderStatusSkeleton() {
 function OrderNotFound() {
   return (
     <div className={styles.notFound}>
-      <title>{`Заказ не найден — ${COMPANY.name}`}</title>
+      <PageMeta title="Заказ не найден" noIndex />
       <h1 className={styles.title}>Заказ не найден</h1>
       <p className={styles.text}>Проверьте ссылку или позвоните нам: {COMPANY.phone}</p>
       <Button to={APP_ROUTES.catalog.path}>В каталог</Button>

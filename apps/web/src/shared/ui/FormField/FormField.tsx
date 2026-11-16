@@ -32,7 +32,8 @@ export function FormField({ label, htmlFor, error, hint, optional, className, ch
   );
 }
 
-const describedBy = (id: string | undefined, invalid: boolean | undefined) => (invalid && id ? `${id}-error` : undefined);
+const describedBy = (id: string | undefined, invalid: boolean | undefined) =>
+  invalid && id ? `${id}-error` : undefined;
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & { invalid?: boolean; ref?: Ref<HTMLInputElement> };
 
@@ -47,7 +48,10 @@ export function Input({ invalid, className, ...rest }: InputProps) {
   );
 }
 
-type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & { invalid?: boolean; ref?: Ref<HTMLTextAreaElement> };
+type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  invalid?: boolean;
+  ref?: Ref<HTMLTextAreaElement>;
+};
 
 export function TextArea({ invalid, className, ...rest }: TextAreaProps) {
   return (

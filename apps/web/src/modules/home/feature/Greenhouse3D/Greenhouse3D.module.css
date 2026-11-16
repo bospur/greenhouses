@@ -17,7 +17,13 @@
   inset: 0;
   background:
     radial-gradient(circle at 50% 85%, rgba(16, 185, 129, 0.2), transparent 55%),
-    repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(16, 185, 129, 0.025) 20px, rgba(16, 185, 129, 0.025) 21px);
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 20px,
+      rgba(16, 185, 129, 0.025) 20px,
+      rgba(16, 185, 129, 0.025) 21px
+    );
   pointer-events: none;
 }
 

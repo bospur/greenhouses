@@ -17,7 +17,11 @@ export function PaymentDialog({ order, state }: PaymentDialogProps) {
   const isPaid = order.status !== 'awaiting_payment';
 
   return (
-    <Modal open={state.open} onClose={state.onClose} title={isPaid ? 'Оплата прошла' : `Оплата заказа № ${order.number}`}>
+    <Modal
+      open={state.open}
+      onClose={state.onClose}
+      title={isPaid ? 'Оплата прошла' : `Оплата заказа № ${order.number}`}
+    >
       {isPaid ? (
         <PaidContent onClose={state.onClose} />
       ) : state.isCreating ? (
@@ -91,8 +95,7 @@ function PaidContent({ onClose }: { onClose: () => void }) {
         <Icon name="check" size={32} strokeWidth={2.5} />
       </span>
       <p className={styles.text}>
-        Спасибо! Менеджер позвонит в течение рабочего дня, чтобы согласовать отгрузку. Чек придёт на телефон или
-        почту.
+        Спасибо! Менеджер позвонит в течение рабочего дня, чтобы согласовать отгрузку. Чек придёт на телефон или почту.
       </p>
       <Button onClick={onClose} block>
         Готово

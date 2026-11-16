@@ -19,7 +19,11 @@ export function CheckoutProgress({ progress }: { progress: Record<CheckoutStepId
       {STEPS.map((step, i) => (
         <li
           key={step.id}
-          className={cn(styles.progressStep, done(step.id) && styles.progressDone, step.id === current && styles.progressCurrent)}
+          className={cn(
+            styles.progressStep,
+            done(step.id) && styles.progressDone,
+            step.id === current && styles.progressCurrent,
+          )}
           aria-current={step.id === current ? 'step' : undefined}
         >
           {done(step.id) ? <Icon name="check" size={14} strokeWidth={2.5} /> : <span aria-hidden="true">{i + 1}.</span>}

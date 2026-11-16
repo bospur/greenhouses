@@ -108,6 +108,11 @@
   gap: 10px;
 }
 
+.choiceList {
+  display: grid;
+  gap: 8px;
+}
+
 .groupLabel {
   font-size: var(--text-sm);
   font-weight: 600;

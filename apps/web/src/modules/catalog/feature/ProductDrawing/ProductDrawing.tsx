@@ -17,7 +17,14 @@ type ProductDrawingProps = {
   className?: string;
 };
 
-export function ProductDrawing({ shape, dimensions, doors, vents = 0, rows = DEFAULT_ROWS, className }: ProductDrawingProps) {
+export function ProductDrawing({
+  shape,
+  dimensions,
+  doors,
+  vents = 0,
+  rows = DEFAULT_ROWS,
+  className,
+}: ProductDrawingProps) {
   const drawing = useMemo(
     () => buildProductDrawing(shape, dimensions, { doors, vents }),
     [shape, dimensions, doors, vents],

@@ -37,9 +37,27 @@ export type FrameOption = {
 
 export const FRAME_OPTIONS: readonly FrameOption[] = [
   { id: '20x20', label: 'Лёгкий 20×20', description: 'Для южных регионов', snowLoadKgM2: 100, pricePerMeter: 0 },
-  { id: '40x20', label: 'Стандарт 40×20', description: 'Оптимум для средней полосы', snowLoadKgM2: 180, pricePerMeter: 700 },
-  { id: '40x40', label: 'Усиленный 40×40', description: 'Широкие и длинные теплицы', snowLoadKgM2: 250, pricePerMeter: 1400 },
-  { id: 'double', label: 'Двойная дуга 2×40×20', description: 'Урал, Сибирь, снежные зимы', snowLoadKgM2: 300, pricePerMeter: 2200 },
+  {
+    id: '40x20',
+    label: 'Стандарт 40×20',
+    description: 'Оптимум для средней полосы',
+    snowLoadKgM2: 180,
+    pricePerMeter: 700,
+  },
+  {
+    id: '40x40',
+    label: 'Усиленный 40×40',
+    description: 'Широкие и длинные теплицы',
+    snowLoadKgM2: 250,
+    pricePerMeter: 1400,
+  },
+  {
+    id: 'double',
+    label: 'Двойная дуга 2×40×20',
+    description: 'Урал, Сибирь, снежные зимы',
+    snowLoadKgM2: 300,
+    pricePerMeter: 2200,
+  },
 ];
 
 export const FRAME_PROFILE_LABELS: Record<FrameId, string> = {

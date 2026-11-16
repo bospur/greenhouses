@@ -17,8 +17,7 @@ export type CustomGreenhouseNetworkDTO = {
 };
 
 export type OrderItemNetworkDTO =
-  | { kind: 'product'; slug: string }
-  | { kind: 'custom'; config: CustomGreenhouseNetworkDTO };
+  { kind: 'product'; slug: string } | { kind: 'custom'; config: CustomGreenhouseNetworkDTO };
 
 export type PaymentMethodNetwork = 'sbp' | 'card';
 

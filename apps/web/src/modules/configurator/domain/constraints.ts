@@ -34,7 +34,8 @@ export function getFrameRequirement(config: GreenhouseConfig): FrameRequirement 
   return rules
     .filter((r) => r.when)
     .reduce<FrameRequirement | null>(
-      (best, r) => (!best || FRAME_RANK[r.frame] > FRAME_RANK[best.frame] ? { frame: r.frame, reason: r.reason } : best),
+      (best, r) =>
+        !best || FRAME_RANK[r.frame] > FRAME_RANK[best.frame] ? { frame: r.frame, reason: r.reason } : best,
       null,
     );
 }
@@ -61,8 +62,10 @@ export function normalizeConfig(input: GreenhouseConfig): NormalizeResult {
   };
   const adjustments: string[] = [];
 
-  if (config.widthM !== input.widthM) adjustments.push(`Ширина изменена на ${formatMeters(config.widthM)} — предел для этой формы`);
-  if (config.heightM !== input.heightM) adjustments.push(`Высота изменена на ${formatMeters(config.heightM)} — предел для этой формы`);
+  if (config.widthM !== input.widthM)
+    adjustments.push(`Ширина изменена на ${formatMeters(config.widthM)} — предел для этой формы`);
+  if (config.heightM !== input.heightM)
+    adjustments.push(`Высота изменена на ${formatMeters(config.heightM)} — предел для этой формы`);
 
   const req = getFrameRequirement(config);
   if (req && FRAME_RANK[config.frame] < FRAME_RANK[req.frame]) {

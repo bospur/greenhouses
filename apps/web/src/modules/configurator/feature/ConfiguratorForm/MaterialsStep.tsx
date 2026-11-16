@@ -1,7 +1,7 @@
 import { formatPriceDelta } from '@/shared/utils';
+import { ChoiceCard } from '@/shared/ui';
 import { FRAME_OPTIONS, FRAME_PROFILE_LABELS, POLYCARBONATE_OPTIONS, isFrameAllowed } from '../../domain';
 import { ConfigStep, Field } from './ConfigStep';
-import { OptionCard } from './OptionCard';
 import type { ConfiguratorFormLogic } from './useLogic';
 import controls from './controls.module.css';
 
@@ -20,8 +20,9 @@ export function MaterialsStep({ logic }: { logic: ConfiguratorFormLogic }) {
       >
         <div className={controls.cardList} role="radiogroup" aria-label="Каркас">
           {FRAME_OPTIONS.map((f) => (
-            <OptionCard
+            <ChoiceCard
               key={f.id}
+              size="sm"
               type="radio"
               name="frame"
               checked={config.frame === f.id}
@@ -38,8 +39,9 @@ export function MaterialsStep({ logic }: { logic: ConfiguratorFormLogic }) {
       <Field label="Сотовый поликарбонат">
         <div className={controls.cardGrid} role="radiogroup" aria-label="Толщина поликарбоната">
           {POLYCARBONATE_OPTIONS.map((p) => (
-            <OptionCard
+            <ChoiceCard
               key={p.mm}
+              size="sm"
               type="radio"
               name="polycarbonate"
               checked={config.polycarbonateMm === p.mm}

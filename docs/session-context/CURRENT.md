@@ -1,6 +1,6 @@
 # CURRENT — где остановились
 
-**Обновлено:** 2026-11-16, после сессии A5
+**Обновлено:** 2026-11-16, после сессии A6 (фаза A закрыта)
 
 ## Проект
 
@@ -98,15 +98,50 @@
 - Cross-module `checkout → configurator/catalog` — ADR-004. Проверено: 1024 и 390, путь модель → заказ → оплата,
   своя конфигурация → «Изменить» → конфигуратор; lint / typecheck / build зелёные.
 
+### A6 — полировка
+- **Роутинг (`App.tsx`):** главная и 404 — eager, остальные экраны — `route.lazy` + `HydrateFallback: PageLoader`;
+  pathless-маршрут `ErrorBoundary: RouteError` вокруг страниц (layout остаётся). `vite.config.ts` —
+  `codeSplitting.groups`: чанк `vendor` (react, react-dom, react-router, @tanstack, axios). zod / RHF в vendor не класть.
+- **`RouteError`** (`shared/ui/Layout`): `isChunkLoadError` (`shared/utils/errors.ts`) → одна автоперезагрузка
+  (метка `greenhouses-chunk-reload` в sessionStorage, пауза 30 с) → иначе экран «Сайт обновился»; прочие ошибки —
+  «Что-то пошло не так».
+- **`AppLayout`:** skip-link, фокус на `<main id="main">` при смене `pathname`, полоса прогресса навигации, слот
+  `headerActions` → `Header actions` (место 40×40 резервируется). **Header:** мобильное меню — `visibility`, Escape,
+  `aria-controls`; «Оформление заказа» убран из `NAV_ITEMS` (и из футера).
+- **`OrderDraftLink`** (`modules/checkout/feature`): значок корзины + бейдж из `useOrderDraftStore`; в `App.tsx`
+  через `React.lazy` + `Suspense fallback={null}`.
+- **shared/ui:** `ChoiceCard` (заменил `OptionCard` и checkout-`ChoiceCard`; `type`, `meta`, `media`, `size`),
+  `PageMeta` (title + description + `noIndex`), `PageLoader`. `<title>` напрямую больше нигде не пишется.
+- `index.html`: og-теги, `theme-color`, `<noscript>`. `global.css`: reduced-motion → `animation-iteration-count: 1`.
+- Prettier в корне (`.prettierrc.json`, `.prettierignore`), `npm run format` / `format:check`, шаг в CI. README обновлён.
+- Сборка: `index` 68 kB (22 gzip) + `vendor` 410 kB (131 gzip); zod 138 kB и checkout 47 kB — отдельно.
+
+## Деплой (dev)
+
+- Репозиторий `git@github.com:bospur/greenhouses.git`, ветки `main` и `dev`. Пуш в `dev` → `.github/workflows/deploy-dev.yml`:
+  `npm ci` → format:check → lint → typecheck → build → rsync `apps/web/dist` в `/var/www/dev.bospur.ru/releases/<sha>` →
+  атомарная смена симлинка `current` → хранится 5 релизов → smoke `curl` по `/` и `/catalog/klassik-3x4`.
+- Сайт `https://dev.bospur.ru` (basic auth, пользователь `bospur`). VPS `147.45.70.86` (Ubuntu 24.04), nginx + certbot
+  (автопродление), ufw: OpenSSH + Nginx Full, вход только по ключу.
+- Пользователь `deploy` владеет `/var/www/dev.bospur.ru`; ключ Actions — `~/.ssh/greenhouses_deploy` на Mac.
+- Секреты в GitHub Environment `dev`: `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`, `SSH_KNOWN_HOSTS`, `BASIC_AUTH`;
+  переменная `VITE_API_URL` (пока не задана — моки).
+- nginx: `/etc/nginx/sites-available/dev.bospur.ru` — SPA-фолбэк на `index.html`, `/assets/` с immutable-кешем.
+  С lazy-чанками важно, чтобы сам `index.html` отдавался без долгого кеша (`no-cache`) — не проверено на сервере;
+  на случай старой вкладки после деплоя есть автоперезагрузка в `RouteError`.
+  Откат: на сервере `ln -sfn releases/<старый_sha> current` в `/var/www/dev.bospur.ru`.
+
 ## Следующий шаг
 
-**A6 — полировка** (последняя сессия фазы A):
-1. Lazy-роуты (`React.lazy` / `route.lazy`) — бандл 670 kB, предупреждение Vite > 500 kB.
-2. Адаптив и a11y-проход по всем экранам (фокус после навигации, `prefers-reduced-motion`, контраст), SEO-мета
-   (description / og) и `<title>` на главной.
-3. Счётчик / ссылка на черновик в шапке (`useOrderDraftStore`), тёмная тема-переключатель (опц.).
-4. Свести `OptionCard` конфигуратора и `ChoiceCard` оформления в общий `shared/ui` компонент.
-5. Prettier + README (запуск, структура, моки, env).
+**Фаза A закрыта.** Следующая сессия — **B1 — каркас API** (`apps/api`, Go):
+1. Go-модуль, `chi`, конфиг из env, `slog`, `GET /healthz`, CORS для `apps/web`.
+2. OpenAPI-контракт `apps/api/api/openapi.yaml` по текущим `*NetworkDTO` из `apps/web/src/data/source`
+   (каталог, доставка, заказы, платёж); ошибки `{ error: { code, message } }`.
+3. Postgres + миграции (`goose`), `docker-compose.yml` в корне (api + postgres).
+4. Добавить `apps/api` в README и CI (go vet / test), не ломая деплой фронта.
+
+Отложено из A6 (можно взять отдельной сессией в любой момент): тёмная тема-переключатель — токены
+`[data-theme='dark']` есть, нужен проход по всем светлым экранам (формы, чертежи, карточки) и хранение выбора.
 
 ## Заметки
 
@@ -123,7 +158,6 @@
 - Встроенный браузер не кликает по визуально скрытым `input` (карточки/чипы конфигуратора) — кликать по координатам
   или через `Runtime.evaluate`. При `Emulation.setDeviceMetricsOverride` координаты кликов смещаются — кликать по ref.
 - Цены моков каталога не согласованы с формулой конфигуратора (совпадает только «Классик») — ждём вопрос №2.
-- `npm run build` предупреждает о бандле > 500 kB — lazy-роуты в A6.
 - CSS Modules с `localsConvention: 'camelCaseOnly'` — классы вида `badge_paid` превращаются в `badgePaid`;
   динамические имена классов не собирать строкой, а мапить явно.
 - Мок оплаты: окно оплаты сам переключается на «Оплата прошла» через ~10 с (опрос `useOrderQuery`).
@@ -131,6 +165,11 @@
 - Котировки мока живут в памяти модуля: после HMR / перезагрузки между расчётом и отправкой мок вернёт
   «Стоимость доставки устарела» — это ожидаемо (выбрать доставку заново).
 - QR в окне оплаты — псевдо-узор, не сканируется (настоящий — из ответа ЮKassa в C1).
+- Импорт из `@/modules/checkout` (barrel) в eager-код тянет весь модуль и zod в основной бандл — только через lazy.
+  Проверять составом чанков после `npm run build` (`index-*.js` ≈ 68 kB).
+- Встроенный браузер может рисовать только узкую полосу (~185 px): `fullPage` и `captureBeyondViewport` дают повтор
+  кадра — скриншоты частями с `window.scrollTo`. После навигации `ScrollRestoration` сбрасывает прокрутку.
+- Перед коммитом — `npm run format` (CI падает на `format:check`).
 
 ## Открытые вопросы
 

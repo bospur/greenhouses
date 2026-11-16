@@ -29,7 +29,12 @@ export function Tabs<T extends string>({ items, value, onChange, idPrefix, label
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>, index: number) => {
-    const moves: Record<string, number> = { ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: items.length - 1 };
+    const moves: Record<string, number> = {
+      ArrowRight: index + 1,
+      ArrowLeft: index - 1,
+      Home: 0,
+      End: items.length - 1,
+    };
     const target = moves[e.key];
     if (target === undefined) return;
     e.preventDefault();

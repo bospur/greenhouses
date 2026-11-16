@@ -1,9 +1,7 @@
-import { Icon } from '@/shared/ui';
+import { ChoiceCard, Icon } from '@/shared/ui';
 import { PAYMENT_METHOD_OPTIONS } from '../../domain';
 import { CheckoutSection } from './CheckoutSection';
-import { ChoiceCard } from './ChoiceCard';
 import type { CheckoutFormLogic } from './useLogic';
-import choice from './choice.module.css';
 import styles from './CheckoutForm.module.css';
 
 export function PaymentStep({ logic }: { logic: CheckoutFormLogic }) {
@@ -11,7 +9,7 @@ export function PaymentStep({ logic }: { logic: CheckoutFormLogic }) {
 
   return (
     <CheckoutSection index={3} title="Оплата" done={logic.progress.payment}>
-      <div className={choice.list} role="radiogroup" aria-label="Способ оплаты">
+      <div className={styles.choiceList} role="radiogroup" aria-label="Способ оплаты">
         {PAYMENT_METHOD_OPTIONS.map((option) => (
           <ChoiceCard
             key={option.id}

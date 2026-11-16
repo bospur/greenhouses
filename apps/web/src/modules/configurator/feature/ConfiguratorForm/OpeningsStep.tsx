@@ -19,7 +19,13 @@ export function OpeningsStep({ logic }: { logic: ConfiguratorFormLogic }) {
     <ConfigStep index={3} title="Двери и форточки" notice={logic.noticeFor('openings')}>
       <div className={controls.row}>
         <Field label="Двери" hint="Дверь 0,8 × 1,8 м с ручкой и запором">
-          <ChoiceChips name="doors" label="Двери" options={doorOptions} value={config.doors} onChange={logic.setDoors} />
+          <ChoiceChips
+            name="doors"
+            label="Двери"
+            options={doorOptions}
+            value={config.doors}
+            onChange={logic.setDoors}
+          />
         </Field>
 
         <Field
