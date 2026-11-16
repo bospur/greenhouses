@@ -1,0 +1,36 @@
+.heading {
+  margin-bottom: 40px;
+}
+
+.center {
+  text-align: center;
+}
+
+.center .subtitle {
+  margin-inline: auto;
+}
+
+.tag {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: var(--color-accent);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.titleLarge {
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+}
+
+.subtitle {
+  max-width: 560px;
+  color: var(--color-text-muted);
+}

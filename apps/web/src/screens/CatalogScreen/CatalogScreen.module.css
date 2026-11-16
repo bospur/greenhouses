@@ -1,0 +1,16 @@
+.page {
+  padding-top: 40px;
+}
+
+.heading {
+  margin-bottom: 28px;
+}
+
+.link {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

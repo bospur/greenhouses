@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ТеплицаПро — Тёмный прототип</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    color:#e5e7eb;line-height:1.5;
+    background:#0a0f0d;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{text-decoration:none;color:inherit}
+  .container{max-width:1240px;margin:0 auto;padding:0 24px}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:13px 26px;border-radius:10px;font-weight:600;font-size:.95rem;
+    cursor:pointer;border:none;transition:.2s;text-align:center;font-family:inherit;
+  }
+  .btn-primary{background:#10b981;color:#052e1f}
+  .btn-primary:hover{background:#34d399;transform:translateY(-1px);box-shadow:0 8px 24px -6px rgba(16,185,129,.5)}
+  .btn-outline{background:transparent;color:#10b981;border:1.5px solid #10b981}
+  .btn-outline:hover{background:rgba(16,185,129,.1)}
+  .btn-ghost{background:rgba(255,255,255,.06);color:#e5e7eb;border:1px solid rgba(255,255,255,.1)}
+  .btn-ghost:hover{background:rgba(255,255,255,.1)}
+  .btn-block{display:flex;width:100%}
+
+  /* HEADER */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(10,15,13,.85);backdrop-filter:blur(16px);
+    border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .nav{display:flex;justify-content:space-between;align-items:center;height:68px}
+  .logo{font-weight:800;font-size:1.3rem;color:#10b981;cursor:pointer;letter-spacing:-.5px}
+  .logo span{color:#e5e7eb}
+  .nav ul{display:flex;gap:28px;list-style:none;font-size:.9rem;color:#9ca3af}
+  .nav ul li{cursor:pointer;padding:6px 0;border-bottom:2px solid transparent;transition:.2s}
+  .nav ul li:hover{color:#10b981}
+  .nav ul li.active{color:#10b981;border-color:#10b981}
+
+  /* SCREENS */
+  .screen{display:none}
+  .screen.active{display:block;animation:fadeIn .35s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* HERO */
+  .hero{
+    position:relative;overflow:hidden;
+    padding:90px 0 80px;
+    background:radial-gradient(ellipse 80% 60% at 20% 0%,rgba(16,185,129,.12),transparent 60%),
+               radial-gradient(ellipse 60% 50% at 80% 100%,rgba(16,185,129,.08),transparent 60%);
+  }
+  .hero-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:60px;align-items:center}
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(16,185,129,.1);color:#34d399;
+    padding:6px 14px;border-radius:999px;font-size:.8rem;font-weight:500;
+    margin-bottom:24px;border:1px solid rgba(16,185,129,.2);
+  }
+  .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:#10b981;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+  .hero h1{
+    font-size:clamp(2rem,4.5vw,3.4rem);
+    line-height:1.1;letter-spacing:-1.5px;margin-bottom:22px;font-weight:800;
+  }
+  .hero h1 .accent{color:#10b981}
+  .hero h1 .line2{display:block;opacity:0;animation:slideUp .8s .3s forwards}
+  .hero h1 .line3{display:block;opacity:0;animation:slideUp .8s .55s forwards}
+  @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+  .hero-desc{font-size:1.1rem;color:#9ca3af;margin-bottom:32px;max-width:520px;opacity:0;animation:slideUp .8s .75s forwards}
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap;opacity:0;animation:slideUp .8s .95s forwards}
+
+  /* ============ 3D GREENHOUSE ============ */
+  .hero-visual{
+    position:relative;height:420px;border-radius:24px;
+    background:linear-gradient(145deg,#0f1a15,#0a0f0d);
+    border:1px solid rgba(16,185,129,.15);
+    overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+    perspective:1200px;
+  }
+  .hero-visual::before{
+    content:'';position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 50% 90%, rgba(16,185,129,.18), transparent 55%),
+      repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(16,185,129,.025) 20px,rgba(16,185,129,.025) 21px);
+    pointer-events:none;
+  }
+
+  .scene{
+    position:relative;
+    width:240px;height:180px;
+    transform-style:preserve-3d;
+    animation:rotateScene 18s linear infinite;
+  }
+  @keyframes rotateScene{
+    from{transform:rotateX(-14deg) rotateY(0deg)}
+    to  {transform:rotateX(-14deg) rotateY(360deg)}
+  }
+  .scene:hover{animation-play-state:paused}
+
+  /* плоскости теплицы */
+  .face{
+    position:absolute;
+    background:linear-gradient(180deg,rgba(16,185,129,.22),rgba(16,185,129,.08));
+    border:1px solid rgba(16,185,129,.5);
+    box-shadow:inset 0 0 30px rgba(16,185,129,.15);
+  }
+  /* сетка (поликарбонат) — общий паттерн */
+  .face::before{
+    content:'';position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(16,185,129,.12) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(16,185,129,.12) 1px,transparent 1px);
+    background-size:30px 30px;
+    pointer-events:none;
+  }
+
+  /* низ — пол, лежит горизонтально */
+  .face.floor{
+    width:240px;height:180px;
+    top:0;left:0;
+    transform:translateZ(-90px) rotateX(90deg);
+    transform-origin:top center;
+    background:linear-gradient(180deg,rgba(16,185,129,.05),rgba(16,185,129,.02));
+    border-color:rgba(16,185,129,.2);
+  }
+  .face.floor::before{opacity:.5}
+
+  /* стены */
+  .face.side{
+    width:180px;height:120px;
+    top:60px;left:30px;
+  }
+  .face.side.front{transform:translateZ(90px)}
+  .face.side.back{transform:translateZ(-90px) rotateY(180deg)}
+  .face.side.left{transform:rotateY(-90deg) translateZ(90px)}
+  .face.side.right{transform:rotateY(90deg) translateZ(90px)}
+
+  /* крыша — 2 наклонные плоскости, соединяющиеся в конёк */
+  .face.roof{
+    width:240px;height:130px;
+    top:-10px;left:0;
+    background:linear-gradient(180deg,rgba(16,185,129,.32),rgba(16,185,129,.12));
+    border-color:rgba(16,185,129,.6);
+  }
+  .face.roof.left{
+    transform-origin:top center;
+    transform:translateZ(0) rotateX(-55deg) translateZ(-100px);
+    clip-path:polygon(0 100%, 100% 100%, 100% 0, 50% 0);
+  }
+  .face.roof.right{
+    transform-origin:top center;
+    transform:translateZ(0) rotateX(-55deg) rotateY(180deg) translateZ(-100px);
+    clip-path:polygon(0 100%, 100% 100%, 0 0, 50% 0);
+  }
+
+  /* дверь */
+  .door{
+    position:absolute;
+    bottom:0;left:50%;transform:translateX(-50%);
+    width:40px;height:70px;
+    background:rgba(5,46,31,.7);
+    border:1px solid rgba(16,185,129,.7);
+    z-index:5;
+  }
+  .door::after{
+    content:'';
+    position:absolute;
+    right:6px;top:50%;
+    width:3px;height:3px;
+    background:#10b981;border-radius:50%;
+  }
+
+  /* подпись / hint */
+  .scene-hint{
+    position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
+    font-size:.75rem;color:#4b5563;letter-spacing:.5px;text-transform:uppercase;
+    background:rgba(0,0,0,.4);padding:6px 14px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.05);white-space:nowrap;
+  }
+
+  /* TRUST BAR */
+  .trust-bar{
+    border-top:1px solid rgba(255,255,255,.05);
+    border-bottom:1px solid rgba(255,255,255,.05);
+    padding:20px 0;background:rgba(255,255,255,.015);
+  }
+  .trust-row{display:flex;justify-content:center;gap:48px;flex-wrap:wrap;font-size:.85rem;color:#6b7280}
+  .trust-row span{display:flex;align-items:center;gap:8px}
+  .trust-row .check{color:#10b981;font-weight:700}
+
+  /* SECTIONS */
+  section{padding:80px 0}
+  .section-tag{
+    display:inline-block;color:#10b981;font-size:.8rem;font-weight:600;
+    letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;
+  }
+  .section-title{font-size:clamp(1.6rem,3vw,2.2rem);letter-spacing:-.5px;margin-bottom:12px;font-weight:700}
+  .section-sub{color:#9ca3af;margin-bottom:48px;font-size:1rem;max-width:560px}
+
+  /* SCROLL REVEAL */
+  .reveal{
+    opacity:0;
+    transform:translateY(32px);
+    transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);
+    will-change:opacity, transform;
+  }
+  .reveal.in{opacity:1;transform:none}
+
+  /* FEATURES */
+  .features{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .feature{
+    background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+    border-radius:16px;padding:28px 24px;transition:.25s;
+  }
+  .feature:hover{border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.04);transform:translateY(-2px)}
+  .feature-icon{font-size:1.8rem;margin-bottom:16px;display:block}
+  .feature h3{font-size:1rem;margin-bottom:6px;font-weight:600}
+  .feature p{font-size:.85rem;color:#6b7280;line-height:1.5}
+
+  /* PRODUCTS */
+  .products{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .product{
+    background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);
+    border-radius:18px;overflow:hidden;transition:.25s;cursor:pointer;
+  }
+  .product:hover{border-color:rgba(16,185,129,.35);transform:translateY(-3px);box-shadow:0 16px 40px -16px rgba(0,0,0,.6)}
+  .product-img{
+    height:200px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(145deg,#0f1a15,#0a1210);
+    color:#374151;font-size:.8rem;border-bottom:1px solid rgba(255,255,255,.05);
+  }
+  .product-body{padding:22px}
+  .product-body h3{font-size:1.05rem;margin-bottom:4px;font-weight:600}
+  .product-meta{font-size:.82rem;color:#6b7280;margin-bottom:16px;line-height:1.5}
+  .product-price{font-size:1.3rem;font-weight:700;color:#10b981;margin-bottom:16px;letter-spacing:-.5px}
+  .product-actions{display:flex;gap:8px}
+  .product-actions .btn{flex:1;padding:10px;font-size:.85rem}
+
+  /* DELIVERY HIGHLIGHT */
+  .delivery-block{
+    background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(16,185,129,.02));
+    border:1px solid rgba(16,185,129,.15);border-radius:20px;
+    padding:40px;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;
+    margin-top:40px;
+  }
+  .delivery-block h3{font-size:1.3rem;margin-bottom:8px;font-weight:700}
+  .delivery-block p{color:#9ca3af;font-size:.95rem}
+
+  /* CATALOG */
+  .page-head{padding:40px 0 28px}
+  .page-head h1{font-size:2rem;letter-spacing:-1px;margin-bottom:6px}
+  .page-head p{color:#9ca3af}
+
+  /* PRODUCT DETAIL */
+  .breadcrumbs{font-size:.85rem;color:#6b7280;margin:24px 0 20px}
+  .breadcrumbs span{cursor:pointer}
+  .breadcrumbs span:hover{color:#10b981}
+  .top{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;margin-bottom:48px}
+  .gallery-main{
+    height:400px;border-radius:18px;
+    background:linear-gradient(145deg,#0f1a15,#0a1210);
+    border:1px solid rgba(255,255,255,.07);
+    display:flex;align-items:center;justify-content:center;
+    color:#374151;font-weight:500;margin-bottom:12px;
+  }
+  .thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .thumb{
+    height:80px;border-radius:10px;background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;
+    font-size:.75rem;color:#4b5563;cursor:pointer;transition:.2s;
+  }
+  .thumb:hover{border-color:#10b981}
+  .top h1{font-size:1.8rem;letter-spacing:-.5px;margin-bottom:12px}
+  .price{font-size:2.2rem;font-weight:800;color:#10b981;margin:20px 0;letter-spacing:-1px}
+  .stock{display:inline-block;background:rgba(16,185,129,.1);color:#34d399;padding:5px 12px;border-radius:999px;font-size:.8rem;font-weight:500;margin-bottom:16px;border:1px solid rgba(16,185,129,.15)}
+
+  .tabs{display:flex;gap:2px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:28px;flex-wrap:wrap}
+  .tab{
+    padding:14px 22px;cursor:pointer;font-weight:500;color:#6b7280;
+    border-bottom:2px solid transparent;margin-bottom:-1px;font-size:.9rem;transition:.2s;
+  }
+  .tab:hover{color:#9ca3af}
+  .tab.active{color:#10b981;border-color:#10b981}
+  .pane{display:none;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:32px;margin-bottom:48px}
+  .pane.active{display:block;animation:fadeIn .3s}
+  .specs{display:grid;grid-template-columns:1fr 1fr;gap:0 48px}
+  .spec-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.9rem}
+  .spec-row span:first-child{color:#6b7280}
+  .drawing{
+    background:rgba(0,0,0,.25);border:1px dashed rgba(255,255,255,.1);
+    border-radius:14px;padding:24px;text-align:center;margin-top:16px;
+  }
+  .drawing svg{max-width:100%;height:auto}
+  .kit-list{list-style:none}
+  .kit-list li{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:12px;font-size:.9rem}
+  .kit-list li:before{content:"✓";color:#10b981;font-weight:700;font-size:1rem}
+  .photos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .photos-grid div{
+    height:180px;border-radius:12px;background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;
+    color:#4b5563;font-size:.85rem;
+  }
+
+  /* CONFIGURATOR */
+  .layout{display:grid;grid-template-columns:420px 1fr;gap:24px;align-items:start;padding-bottom:60px}
+  .panel{
+    background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);
+    border-radius:18px;padding:28px;
+  }
+  .panel h3{font-size:1.05rem;margin-bottom:20px;font-weight:600;display:flex;align-items:center;gap:10px}
+  .panel h3 .num{
+    width:24px;height:24px;border-radius:50%;background:rgba(16,185,129,.15);
+    color:#10b981;font-size:.75rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;
+  }
+  .field{margin-bottom:18px}
+  .field label{display:block;font-size:.82rem;color:#9ca3af;margin-bottom:8px;font-weight:500}
+  .field input,.field select{
+    width:100%;padding:12px 14px;border:1px solid rgba(255,255,255,.1);
+    border-radius:10px;font-size:.95rem;background:rgba(0,0,0,.3);color:#e5e7eb;
+    transition:.2s;font-family:inherit;
+  }
+  .field input:focus,.field select:focus{
+    outline:none;border-color:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.12);
+  }
+  .field .hint{font-size:.75rem;color:#4b5563;margin-top:6px}
+  .checks{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+  .check{display:flex;align-items:center;gap:10px;font-size:.9rem;cursor:pointer;color:#d1d5db}
+  .check input{width:18px;height:18px;accent-color:#10b981;cursor:pointer;border-radius:4px}
+  .summary{
+    background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(16,185,129,.03));
+    border:1px solid rgba(16,185,129,.2);border-radius:14px;padding:22px;margin-top:22px;
+  }
+  .summary .row{display:flex;justify-content:space-between;padding:7px 0;font-size:.88rem;color:#9ca3af}
+  .summary .row span:last-child{color:#e5e7eb;font-weight:500}
+  .summary .total{
+    display:flex;justify-content:space-between;padding-top:14px;margin-top:10px;
+    border-top:1px solid rgba(16,185,129,.2);font-size:1.25rem;font-weight:800;color:#10b981;
+  }
+  .drawing-panel{
+    background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);
+    border-radius:18px;padding:28px;position:sticky;top:88px;
+  }
+  .drawing-panel h3{font-size:1.05rem;margin-bottom:20px;font-weight:600}
+  .drawing-box{
+    background:rgba(0,0,0,.3);border:1px dashed rgba(255,255,255,.12);
+    border-radius:14px;padding:24px;display:flex;align-items:center;justify-content:center;min-height:420px;
+  }
+  .drawing-box svg{max-width:100%;height:auto}
+  .legend{display:flex;gap:24px;margin-top:16px;font-size:.78rem;color:#6b7280;flex-wrap:wrap}
+  .legend span:before{content:"■";margin-right:6px;color:#10b981}
+
+  /* CHECKOUT */
+  .steps{display:flex;gap:8px;margin-bottom:32px;font-size:.85rem;color:#6b7280;flex-wrap:wrap}
+  .step{padding:9px 16px;border-radius:999px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)}
+  .step.active{background:#10b981;color:#052e1f;border-color:#10b981;font-weight:600}
+  .step.done{background:rgba(16,185,129,.1);color:#34d399;border-color:rgba(16,185,129,.2)}
+  .checkout-layout{display:grid;grid-template-columns:1fr 400px;gap:24px;align-items:start;padding-bottom:60px}
+  .card{
+    background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);
+    border-radius:18px;padding:28px;margin-bottom:16px;
+  }
+  .card h2{font-size:1.05rem;margin-bottom:20px;font-weight:600}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .delivery-list{display:none;flex-direction:column;gap:10px;margin-top:16px}
+  .delivery-list.show{display:flex}
+  .delivery-opt{
+    display:flex;justify-content:space-between;align-items:center;padding:16px;
+    border:1.5px solid rgba(255,255,255,.08);border-radius:12px;cursor:pointer;transition:.2s;
+  }
+  .delivery-opt:hover{border-color:rgba(16,185,129,.3)}
+  .delivery-opt.selected{border-color:#10b981;background:rgba(16,185,129,.06)}
+  .delivery-opt .name{font-weight:600;font-size:.95rem}
+  .delivery-opt .eta{font-size:.8rem;color:#6b7280;margin-top:2px}
+  .delivery-opt .cost{font-weight:700;color:#10b981;white-space:nowrap}
+  .summary-card{position:sticky;top:88px}
+  .summary-row{display:flex;justify-content:space-between;padding:9px 0;font-size:.9rem;color:#9ca3af}
+  .summary-row span:last-child{color:#e5e7eb}
+  .summary-total{
+    display:flex;justify-content:space-between;padding-top:16px;margin-top:12px;
+    border-top:1px solid rgba(255,255,255,.1);font-size:1.3rem;font-weight:800;color:#10b981;
+  }
+
+  /* MODAL */
+  .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;z-index:100;padding:20px}
+  .modal-bg.show{display:flex;animation:fadeIn .2s}
+  .modal{
+    background:#111a16;border:1px solid rgba(16,185,129,.2);
+    border-radius:20px;padding:36px;max-width:420px;width:100%;text-align:center;
+  }
+  .modal h3{font-size:1.2rem;margin-bottom:8px}
+  .modal p{color:#6b7280;margin-bottom:24px;font-size:.9rem}
+  .qr{width:220px;height:220px;margin:0 auto 24px;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;padding:12px}
+  .qr svg{width:100%;height:100%}
+  .modal .amount{font-size:1.7rem;font-weight:800;color:#10b981;margin-bottom:24px}
+
+  /* FOOTER */
+  footer{border-top:1px solid rgba(255,255,255,.06);padding:40px 0;font-size:.85rem;color:#6b7280;margin-top:auto}
+  footer .container{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px}
+
+  /* RESPONSIVE */
+  @media(max-width:960px){
+    .hero-grid,.top,.layout,.checkout-layout{grid-template-columns:1fr}
+    .hero-visual{height:340px}
+    .features{grid-template-columns:repeat(2,1fr)}
+    .products{grid-template-columns:1fr 1fr}
+    .gallery-main{height:280px}
+    .specs{grid-template-columns:1fr}
+    .photos-grid{grid-template-columns:1fr 1fr}
+    .drawing-panel,.summary-card{position:static}
+    .delivery-block{grid-template-columns:1fr;text-align:center}
+  }
+  @media(max-width:600px){
+    .nav ul{display:none}
+    .features,.products{grid-template-columns:1fr}
+    .field-row{grid-template-columns:1fr}
+    .photos-grid{grid-template-columns:1fr}
+    .hero{padding:60px 0 40px}
+    .scene{transform:scale(.85);animation-duration:24s}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .scene{animation:none}
+    .reveal{transition:none;opacity:1;transform:none}
+    .hero h1 .line2,.hero h1 .line3,.hero-desc,.hero-actions{animation:none;opacity:1}
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="container nav">
+    <div class="logo" onclick="go('home')">Теплица<span>Про</span></div>
+    <ul>
+      <li data-page="home" class="active" onclick="go('home')">Главная</li>
+      <li data-page="catalog" onclick="go('catalog')">Теплицы</li>
+      <li data-page="product" onclick="go('product')">Модель</li>
+      <li data-page="configurator" onclick="go('configurator')">Свои размеры</li>
+      <li data-page="checkout" onclick="go('checkout')">Заказ</li>
+    </ul>
+    <button class="btn btn-primary" onclick="go('configurator')">Рассчитать</button>
+  </div>
+</header>
+
+<!-- HOME -->
+<div class="screen active" id="screen-home">
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-badge"><span class="dot"></span> Доставка по всей России · Гарантия 5 лет</div>
+        <h1>
+          Теплица, которая
+          <span class="line2">подходит <span class="accent">именно вам</span></span>
+          <span class="line3">по размеру и цене</span>
+        </h1>
+        <p class="hero-desc">Стандартные модели — от 19 900 ₽. Или соберите свою: укажите длину, ширину и опции — увидите чертёж и итоговую стоимость сразу.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="go('configurator')">Собрать свою теплицу →</button>
+          <button class="btn btn-ghost" onclick="go('catalog')">Смотреть каталог</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="scene">
+          <div class="face floor"></div>
+          <div class="face side back"></div>
+          <div class="face side left"></div>
+          <div class="face side right"></div>
+          <div class="face side front">
+            <div class="door"></div>
+          </div>
+          <div class="face roof left"></div>
+          <div class="face roof right"></div>
+        </div>
+        <div class="scene-hint">Наведите — вращение остановится</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="trust-bar reveal">
+    <div class="container trust-row">
+      <span><span class="check">✓</span> Без предоплаты</span>
+      <span><span class="check">✓</span> Оплата после сборки</span>
+      <span><span class="check">✓</span> Доставка от 0 ₽ (самовывоз)</span>
+      <span><span class="check">✓</span> Монтаж «под ключ»</span>
+    </div>
+  </div>
+
+  <section>
+    <div class="container">
+      <div class="reveal">
+        <span class="section-tag">Почему мы</span>
+        <h2 class="section-title">Скорость. Удобство. Надёжность.</h2>
+        <p class="section-sub">Всё, что важно при покупке теплицы — прозрачно и без сюрпризов.</p>
+      </div>
+      <div class="features">
+        <div class="feature reveal"><span class="feature-icon">⚡</span><h3>Расчёт за 30 секунд</h3><p>Конфигуратор показывает цену и чертёж мгновенно</p></div>
+        <div class="feature reveal"><span class="feature-icon">🚚</span><h3>Доставка по РФ</h3><p>Стоимость через API ТК — сразу видите итог</p></div>
+        <div class="feature reveal"><span class="feature-icon">🛡️</span><h3>Гарантия 5 лет</h3><p>На каркас и поликарбонат</p></div>
+        <div class="feature reveal"><span class="feature-icon">🔧</span><h3>Монтаж под ключ</h3><p>Соберём на вашем участке</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="container">
+      <div class="reveal">
+        <span class="section-tag">Каталог</span>
+        <h2 class="section-title">Популярные модели</h2>
+        <p class="section-sub">Готовы к отправке. Или измените размеры в конфигураторе.</p>
+      </div>
+      <div class="products" id="home-products"></div>
+
+      <div class="delivery-block reveal">
+        <div>
+          <h3>🚚 Доставка по всей России</h3>
+          <p>Рассчитаем стоимость через СДЭК, Почту России или Деловые Линии. Выберите удобный вариант при оформлении.</p>
+        </div>
+        <button class="btn btn-outline" onclick="go('checkout')">Рассчитать доставку →</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- CATALOG -->
+<div class="screen" id="screen-catalog">
+  <div class="container">
+    <div class="page-head">
+      <h1>Стандартные теплицы</h1>
+      <p>Выберите модель — или соберите свою в <a style="color:#10b981;cursor:pointer" onclick="go('configurator')">конфигураторе</a></p>
+    </div>
+    <div class="products" id="catalog-grid" style="padding-bottom:60px"></div>
+  </div>
+</div>
+
+<!-- PRODUCT -->
+<div class="screen" id="screen-product">
+  <div class="container">
+    <div class="breadcrumbs">
+      <span onclick="go('home')">Главная</span> /
+      <span onclick="go('catalog')">Теплицы</span> /
+      <span>«Классик» 3×4</span>
+    </div>
+
+    <div class="top">
+      <div>
+        <div class="gallery-main">[ фото теплицы ]</div>
+        <div class="thumbs">
+          <div class="thumb">фото 1</div><div class="thumb">фото 2</div>
+          <div class="thumb">фото 3</div><div class="thumb">фото 4</div>
+        </div>
+      </div>
+      <div>
+        <div class="stock">✓ В наличии</div>
+        <h1>Теплица «Классик» 3×4 м</h1>
+        <p style="color:#9ca3af;margin-bottom:20px">Оцинкованный каркас 40×20 мм, поликарбонат 4 мм. Две двери + две форточки.</p>
+        <div class="price">24 900 ₽</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+          <button class="btn btn-primary" onclick="go('checkout')">Заказать</button>
+          <button class="btn btn-outline" onclick="go('configurator')">Изменить размеры</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="specs">Характеристики</div>
+      <div class="tab" data-tab="drawing">Чертёж</div>
+      <div class="tab" data-tab="kit">Комплектация</div>
+      <div class="tab" data-tab="photos">Фото</div>
+    </div>
+
+    <div class="pane active" id="specs">
+      <h3 style="margin-bottom:20px;font-weight:600">Характеристики</h3>
+      <div class="specs">
+        <div class="spec-row"><span>Ширина</span><span>3 м</span></div>
+        <div class="spec-row"><span>Длина</span><span>4 м</span></div>
+        <div class="spec-row"><span>Высота</span><span>2,1 м</span></div>
+        <div class="spec-row"><span>Каркас</span><span>Профиль 40×20 мм</span></div>
+        <div class="spec-row"><span>Покрытие</span><span>Поликарбонат 4 мм</span></div>
+        <div class="spec-row"><span>Двери</span><span>2 шт.</span></div>
+        <div class="spec-row"><span>Форточки</span><span>2 шт.</span></div>
+        <div class="spec-row"><span>Гарантия</span><span>5 лет</span></div>
+      </div>
+    </div>
+
+    <div class="pane" id="drawing">
+      <h3 style="margin-bottom:16px;font-weight:600">Чертёж</h3>
+      <p style="color:#9ca3af;margin-bottom:20px">Схематичный вид спереди и сверху. Индивидуальные размеры — в конфигураторе.</p>
+      <div class="drawing">
+        <svg viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+          <rect x="40" y="60" width="180" height="140" fill="rgba(16,185,129,.08)" stroke="#10b981" stroke-width="2"/>
+          <rect x="120" y="150" width="40" height="50" fill="none" stroke="#10b981" stroke-width="1.5"/>
+          <text x="130" y="50" font-size="12" fill="#6b7280">Вид спереди</text>
+          <text x="40" y="220" font-size="11" fill="#6b7280">Ширина 3 м</text>
+          <text x="240" y="140" font-size="11" fill="#6b7280">Высота 2,1 м</text>
+
+          <rect x="300" y="90" width="160" height="110" fill="rgba(16,185,129,.08)" stroke="#10b981" stroke-width="2"/>
+          <line x1="300" y1="120" x2="460" y2="120" stroke="#10b981" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="300" y1="150" x2="460" y2="150" stroke="#10b981" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="300" y1="180" x2="460" y2="180" stroke="#10b981" stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="340" y="80" font-size="12" fill="#6b7280">Вид сверху</text>
+          <text x="300" y="215" font-size="11" fill="#6b7280">Длина 4 м</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="pane" id="kit">
+      <h3 style="margin-bottom:20px;font-weight:600">Комплектация</h3>
+      <ul class="kit-list">
+        <li>Дуги каркаса — 8 шт.</li>
+        <li>Продольные трубы — 4 шт.</li>
+        <li>Двери с ручками — 2 шт.</li>
+        <li>Форточки — 2 шт.</li>
+        <li>Листы поликарбоната 4 мм — 6 шт.</li>
+        <li>Торцевые профили и крепёж</li>
+        <li>Инструкция по сборке</li>
+      </ul>
+    </div>
+
+    <div class="pane" id="photos">
+      <h3 style="margin-bottom:20px;font-weight:600">Фото</h3>
+      <div class="photos-grid">
+        <div>Фото теплицы в сборе</div>
+        <div>Вид внутри</div>
+        <div>Деталь крепежа</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIGURATOR -->
+<div class="screen" id="screen-configurator">
+  <div class="container">
+    <div class="page-head">
+      <span class="section-tag">Конфигуратор</span>
+      <h1>Соберите свою теплицу</h1>
+      <p>Меняйте параметры — цена и чертёж обновляются мгновенно</p>
+    </div>
+
+    <div class="layout">
+      <div class="panel">
+        <h3><span class="num">1</span> Размеры</h3>
+
+        <div class="field">
+          <label>Длина (м)</label>
+          <input type="number" id="length" value="4" min="2" max="12" step="0.5">
+          <div class="hint">от 2 до 12 м, шаг 0,5 м</div>
+        </div>
+
+        <div class="field">
+          <label>Ширина (м)</label>
+          <input type="number" id="width" value="3" min="2" max="6" step="0.5">
+          <div class="hint">от 2 до 6 м</div>
+        </div>
+
+        <div class="field">
+          <label>Высота (м)</label>
+          <input type="number" id="height" value="2.1" min="1.8" max="2.8" step="0.1">
+        </div>
+
+        <h3 style="margin-top:28px"><span class="num">2</span> Материалы</h3>
+
+        <div class="field">
+          <label>Тип каркаса</label>
+          <select id="frame">
+            <option value="std" data-price="0">Стандартный (40×20)</option>
+            <option value="reinforced" data-price="4500">Усиленный (40×40)</option>
+            <option value="profi" data-price="9000">Профи (двойной)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Поликарбонат</label>
+          <select id="poly">
+            <option value="4" data-price="0">4 мм</option>
+            <option value="6" data-price="2500">6 мм</option>
+            <option value="8" data-price="5000">8 мм</option>
+          </select>
+        </div>
+
+        <h3 style="margin-top:28px"><span class="num">3</span> Опции</h3>
+
+        <div class="checks">
+          <label class="check"><input type="checkbox" class="opt" data-price="1500"> Доп. форточка</label>
+          <label class="check"><input type="checkbox" class="opt" data-price="3500"> Автоматика проветривания</label>
+          <label class="check"><input type="checkbox" class="opt" data-price="8000"> Монтаж «под ключ»</label>
+          <label class="check"><input type="checkbox" class="opt" data-price="2500"> Грядки в комплекте</label>
+        </div>
+
+        <div class="summary">
+          <div class="row"><span>Базовая стоимость</span><span id="basePrice">—</span></div>
+          <div class="row"><span>Опции</span><span id="optPrice">—</span></div>
+          <div class="total"><span>Итого</span><span id="totalPrice">—</span></div>
+        </div>
+
+        <button class="btn btn-primary btn-block" style="margin-top:20px" onclick="go('checkout')">Перейти к оформлению →</button>
+      </div>
+
+      <div class="drawing-panel">
+        <h3>Предварительный чертёж</h3>
+        <div class="drawing-box">
+          <svg id="draw" viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div class="legend">
+          <span>Размеры — в метрах</span>
+          <span>Вид спереди + сверху</span>
+          <span>Обновляется в реальном времени</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT -->
+<div class="screen" id="screen-checkout">
+  <div class="container">
+    <div class="page-head">
+      <h1>Оформление заказа</h1>
+    </div>
+
+    <div class="steps">
+      <div class="step done">1. Конфигурация</div>
+      <div class="step active">2. Доставка и данные</div>
+      <div class="step">3. Оплата</div>
+    </div>
+
+    <div class="checkout-layout">
+      <div>
+        <div class="card">
+          <h2>🚚 Куда доставить</h2>
+          <div class="field-row">
+            <div class="field">
+              <label>Город</label>
+              <input type="text" id="city" placeholder="Москва" value="Москва">
+            </div>
+            <div class="field">
+              <label>Индекс</label>
+              <input type="text" id="zip" placeholder="101000" value="101000">
+            </div>
+          </div>
+          <div class="field">
+            <label>Адрес (улица, дом)</label>
+            <input type="text" placeholder="ул. Ленина, д. 1" value="ул. Ленина, д. 1">
+          </div>
+          <button class="btn btn-outline btn-block" id="calcBtn" style="margin-top:4px">Рассчитать доставку</button>
+          <div class="delivery-list" id="deliveries"></div>
+        </div>
+
+        <div class="card">
+          <h2>Ваши данные</h2>
+          <div class="field-row">
+            <div class="field"><label>Имя</label><input type="text" placeholder="Иван"></div>
+            <div class="field"><label>Фамилия</label><input type="text" placeholder="Иванов"></div>
+          </div>
+          <div class="field"><label>Телефон</label><input type="tel" placeholder="+7 (___) ___-__-__"></div>
+          <div class="field"><label>Email (для чека)</label><input type="email" placeholder="you@example.com"></div>
+        </div>
+
+        <div class="card">
+          <h2>Способ оплаты</h2>
+          <div class="field">
+            <select>
+              <option>QR-код (СБП)</option>
+              <option>Банковская карта</option>
+              <option>Счёт для юр. лица</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="card summary-card">
+          <h2>Ваш заказ</h2>
+          <div class="summary-row"><span>Теплица (3×4, станд.)</span><span>24 900 ₽</span></div>
+          <div class="summary-row"><span>Опции</span><span>1 500 ₽</span></div>
+          <div class="summary-row"><span>Доставка</span><span id="deliveryPrice">—</span></div>
+          <div class="summary-total"><span>Итого</span><span id="grandTotal">—</span></div>
+          <button class="btn btn-primary btn-block" style="margin-top:20px" id="payBtn">Оплатить</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h3>Оплата заказа</h3>
+    <p>Отсканируйте QR-код в приложении банка</p>
+    <div class="qr" id="qrBox"></div>
+    <div class="amount" id="modalAmount">—</div>
+    <button class="btn btn-ghost btn-block" onclick="document.getElementById('modal').classList.remove('show')">Закрыть</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div>© 2025 ТеплицаПро. Тёмный прототип.</div>
+    <div>+7 (999) 000-00-00 · info@teplicapro.ru</div>
+  </div>
+</footer>
+
+<script>
+/* NAV */
+function go(page){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+page).classList.add('active');
+  document.querySelectorAll('.nav ul li').forEach(li=>{
+    li.classList.toggle('active', li.dataset.page === page);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+  // после смены экрана заново поднимаем reveal-наблюдатель
+  requestAnimationFrame(setupReveal);
+}
+
+/* CATALOG */
+const items = [
+  {id:1, name:'Классик',    size:'3×4 м', price:24900, desc:'Поликарбонат 4 мм, оцинкованный каркас'},
+  {id:2, name:'Усиленная',  size:'3×6 м', price:38900, desc:'Каркас 40×20, поликарбонат 4 мм'},
+  {id:3, name:'Мини',       size:'2×4 м', price:19900, desc:'Компактная для небольших участков'},
+  {id:4, name:'Капля',      size:'3×5 м', price:32900, desc:'Арочная форма, снеговая нагрузка'},
+  {id:5, name:'Профи',      size:'4×8 м', price:54900, desc:'Двойной каркас, усиленные дуги'},
+  {id:6, name:'Дачник',     size:'3×4 м', price:21900, desc:'Базовая модель с гарантией 3 года'},
+];
+
+function productCard(p, withReveal = true){
+  return `
+    <article class="product${withReveal ? ' reveal' : ''}">
+      <div class="product-img">[ фото теплицы ]</div>
+      <div class="product-body">
+        <h3>«${p.name}»</h3>
+        <div class="product-meta">${p.size} · ${p.desc}</div>
+        <div class="product-price">${p.price.toLocaleString('ru-RU')} ₽</div>
+        <div class="product-actions">
+          <button class="btn btn-outline" onclick="go('product')">Подробнее</button>
+          <button class="btn btn-primary" onclick="go('checkout')">Заказать</button>
+        </div>
+      </div>
+    </article>`;
+}
+
+document.getElementById('home-products').innerHTML = items.slice(0,3).map(p => productCard(p)).join('');
+document.getElementById('catalog-grid').innerHTML = items.map(p => productCard(p)).join('');
+
+/* TABS */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.onclick = () => {
+    document.querySelectorAll('.tab,.pane').forEach(el=>el.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById(t.dataset.tab).classList.add('active');
+  };
+});
+
+/* CONFIGURATOR */
+const basePricePerM2 = 1800;
+const cfgInputs = ['length','width','height','frame','poly'];
+const optBoxes = document.querySelectorAll('.opt');
+
+function getVals(){
+  return {
+    L: parseFloat(document.getElementById('length').value) || 0,
+    W: parseFloat(document.getElementById('width').value) || 0,
+    H: parseFloat(document.getElementById('height').value) || 0,
+    frame: document.getElementById('frame').selectedOptions[0],
+    poly: document.getElementById('poly').selectedOptions[0],
+    opts: [...optBoxes].filter(o=>o.checked)
+  };
+}
+
+function renderConfig(){
+  const v = getVals();
+
+  const area = v.L * v.W;
+  const base = area * basePricePerM2;
+  const frameExtra = +v.frame.dataset.price;
+  const polyExtra = +v.poly.dataset.price;
+  const optSum = v.opts.reduce((s,o)=>s + (+o.dataset.price), 0);
+  const optTotal = frameExtra + polyExtra + optSum;
+  const total = base + optTotal;
+
+  document.getElementById('basePrice').textContent = base.toLocaleString('ru-RU') + ' ₽';
+  document.getElementById('optPrice').textContent = optTotal.toLocaleString('ru-RU') + ' ₽';
+  document.getElementById('totalPrice').textContent = total.toLocaleString('ru-RU') + ' ₽';
+
+  const maxW = 260, maxH = 120;
+  const scaleL = Math.min(maxW / v.L, 30);
+  const scaleW = Math.min(maxW / v.W, 30);
+  const scaleH = Math.min(maxH / v.H, 60);
+
+  const frontW = v.W * scaleW;
+  const frontH = v.H * scaleH;
+  const topL = v.L * scaleL;
+  const topW = v.W * scaleW;
+
+  const cx1 = 160, cy1 = 170;
+  const cx2 = 420, cy2 = 170;
+
+  const frontX = cx1 - frontW/2;
+  const frontY = cy1 - frontH/2;
+  const topX = cx2 - topL/2;
+  const topY = cy2 - topW/2;
+
+  document.getElementById('draw').innerHTML = `
+    <text x="${frontX}" y="${frontY - 34}" font-size="13" fill="#6b7280">Вид спереди</text>
+    <rect x="${frontX}" y="${frontY}" width="${frontW}" height="${frontH}"
+          fill="rgba(16,185,129,.08)" stroke="#10b981" stroke-width="2" rx="2"/>
+    <path d="M ${frontX} ${frontY + 20} Q ${cx1} ${frontY - 34} ${frontX + frontW} ${frontY + 20}"
+          fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="5 4"/>
+    <rect x="${cx1 - 18}" y="${frontY + frontH - 50}" width="36" height="50"
+          fill="none" stroke="#10b981" stroke-width="1.5"/>
+    <line x1="${frontX}" y1="${frontY + frontH + 15}" x2="${frontX + frontW}" y2="${frontY + frontH + 15}"
+          stroke="#6b7280" stroke-width="1"/>
+    <text x="${cx1}" y="${frontY + frontH + 34}" font-size="12" fill="#9ca3af" text-anchor="middle">${v.W} м</text>
+    <line x1="${frontX - 20}" y1="${frontY}" x2="${frontX - 20}" y2="${frontY + frontH}"
+          stroke="#6b7280" stroke-width="1"/>
+    <text x="${frontX - 32}" y="${cy1}" font-size="12" fill="#9ca3af" text-anchor="middle" transform="rotate(-90 ${frontX-32} ${cy1})">${v.H} м</text>
+
+    <text x="${topX}" y="${topY - 24}" font-size="13" fill="#6b7280">Вид сверху</text>
+    <rect x="${topX}" y="${topY}" width="${topL}" height="${topW}"
+          fill="rgba(16,185,129,.08)" stroke="#10b981" stroke-width="2" rx="2"/>
+    ${[1,2,3].map(i => `<line x1="${topX + (topL/4)*i}" y1="${topY}" x2="${topX + (topL/4)*i}" y2="${topY + topW}" stroke="#10b981" stroke-width="1" stroke-dasharray="3 3"/>`).join('')}
+    <text x="${cx2}" y="${topY + topW + 24}" font-size="12" fill="#9ca3af" text-anchor="middle">${v.L} м</text>
+    <text x="${topX + topL + 18}" y="${cy2}" font-size="12" fill="#9ca3af" text-anchor="middle" transform="rotate(90 ${topX+topL+18} ${cy2})">${v.W} м</text>
+  `;
+}
+
+cfgInputs.forEach(id => document.getElementById(id).addEventListener('input', renderConfig));
+optBoxes.forEach(o => o.addEventListener('change', renderConfig));
+renderConfig();
+
+/* CHECKOUT */
+const baseGoods = 24900 + 1500;
+let selectedDelivery = null;
+const fmt = n => n.toLocaleString('ru-RU') + ' ₽';
+
+function mockDeliveryAPI(city){
+  return new Promise(res => setTimeout(() => res([
+    {id:'cdek',   name:'СДЭК',          eta:'3–5 дней',   cost:2900},
+    {id:'post',   name:'Почта России',  eta:'7–12 дней',  cost:1800},
+    {id:'dellin', name:'Деловые Линии', eta:'4–6 дней',   cost:2400},
+    {id:'pickup', name:'Самовывоз',     eta:'со склада',  cost:0},
+  ]), 700));
+}
+
+document.getElementById('calcBtn').onclick = async () => {
+  const city = document.getElementById('city').value.trim() || 'Москва';
+  const listEl = document.getElementById('deliveries');
+  listEl.classList.add('show');
+  listEl.innerHTML = '<div style="color:#6b7280;font-size:.9rem;padding:8px">Считаем доставку...</div>';
+
+  const options = await mockDeliveryAPI(city);
+
+  listEl.innerHTML = options.map(o => `
+    <div class="delivery-opt" data-cost="${o.cost}">
+      <div>
+        <div class="name">${o.name}</div>
+        <div class="eta">${o.eta}</div>
+      </div>
+      <div class="cost">${o.cost ? fmt(o.cost) : 'бесплатно'}</div>
+    </div>
+  `).join('');
+
+  listEl.querySelectorAll('.delivery-opt').forEach(el => {
+    el.onclick = () => {
+      listEl.querySelectorAll('.delivery-opt').forEach(x=>x.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedDelivery = +el.dataset.cost;
+      updateSummary();
+    };
+  });
+};
+
+function updateSummary(){
+  const d = selectedDelivery ?? 0;
+  const total = baseGoods + d;
+  document.getElementById('deliveryPrice').textContent = selectedDelivery === null ? '—' : fmt(d);
+  document.getElementById('grandTotal').textContent = fmt(total);
+  document.getElementById('modalAmount').textContent = fmt(total);
+}
+updateSummary();
+
+document.getElementById('payBtn').onclick = () => {
+  if (selectedDelivery === null) {
+    alert('Пожалуйста, рассчитайте и выберите доставку');
+    return;
+  }
+  document.getElementById('modal').classList.add('show');
+};
+
+/* QR */
+(function drawQR(){
+  const size = 21;
+  const isCorner = (x,y) => (x<7&&y<7) || (x>=size-7&&y<7) || (x<7&&y>=size-7);
+  const cornerFill = (x,y) => (x===0||y===0||x===6||y===6) || (x>=2&&x<=4&&y>=2&&y<=4);
+  let svg = `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">`;
+  svg += `<rect width="${size}" height="${size}" fill="#fff"/>`;
+  for (let y=0;y<size;y++){
+    for (let x=0;x<size;x++){
+      let fill = false;
+      if (isCorner(x,y)) {
+        let lx = x<7?x:(x>=size-7?x-(size-7):null);
+        let ly = y<7?y:(y>=size-7?y-(size-7):null);
+        if (lx!==null && ly!==null) fill = cornerFill(lx,ly);
+      } else {
+        fill = ((x*7 + y*13 + x*y) % 3 === 0);
+      }
+      if (fill) svg += `<rect x="${x}" y="${y}" width="1" height="1" fill="#111827"/>`;
+    }
+  }
+  svg += `</svg>`;
+  document.getElementById('qrBox').innerHTML = svg;
+})();
+
+/* SCROLL REVEAL */
+let revealObserver = null;
+function setupReveal(){
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    return;
+  }
+  if (revealObserver) revealObserver.disconnect();
+
+  revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        const el = e.target;
+        // стаггер: индекс среди «соседей» одного родителя
+        const siblings = [...el.parentElement.querySelectorAll('.reveal')];
+        const idx = siblings.indexOf(el);
+        el.style.transitionDelay = Math.min(idx * 60, 360) + 'ms';
+        el.classList.add('in');
+        revealObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.screen.active .reveal:not(.in)').forEach(el => {
+    revealObserver.observe(el);
+  });
+}
+
+/* старт */
+setupReveal();
+go('home');
+</script>
+</body>
+</html>

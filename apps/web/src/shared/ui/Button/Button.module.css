@@ -1,0 +1,86 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition);
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.sm {
+  padding: 8px 14px;
+  font-size: var(--text-sm);
+}
+
+.md {
+  padding: 11px 22px;
+  font-size: 0.95rem;
+}
+
+.lg {
+  padding: 14px 28px;
+  font-size: var(--text-md);
+}
+
+.block {
+  display: flex;
+  width: 100%;
+}
+
+.primary {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-accent);
+}
+
+.outline {
+  background: transparent;
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.outline:hover:not(:disabled) {
+  background: var(--color-accent-soft);
+}
+
+/* for dark sections */
+.ghost {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-dark-text);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* on accent backgrounds */
+.light {
+  background: #fff;
+  color: var(--color-accent);
+}
+
+.light:hover:not(:disabled) {
+  background: var(--color-accent-soft);
+}

@@ -1,0 +1,1 @@
+export { GreenhouseIllustration } from './GreenhouseIllustration';

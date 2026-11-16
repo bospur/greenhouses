@@ -1,0 +1,167 @@
+.visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 440px;
+  overflow: hidden;
+  border: 1px solid rgba(16, 185, 129, 0.18);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(145deg, var(--color-dark-surface), var(--color-dark-bg));
+  perspective: 1100px;
+}
+
+.visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 85%, rgba(16, 185, 129, 0.2), transparent 55%),
+    repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(16, 185, 129, 0.025) 20px, rgba(16, 185, 129, 0.025) 21px);
+  pointer-events: none;
+}
+
+.stage {
+  position: absolute;
+  top: 62%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+}
+
+.scene {
+  position: absolute;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  animation: rotate 22s linear infinite;
+}
+
+.visual:hover .scene {
+  animation-play-state: paused;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotateX(-16deg) rotateY(0deg);
+  }
+
+  to {
+    transform: rotateX(-16deg) rotateY(360deg);
+  }
+}
+
+.ground,
+.panel,
+.rib,
+.endWall {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.ground {
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 6px;
+  background:
+    linear-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px) 0 0 / 24px 24px,
+    rgba(16, 185, 129, 0.04);
+}
+
+.panel {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
+  border-left: 1px solid rgba(52, 211, 153, 0.55);
+  box-shadow: inset 0 0 18px rgba(16, 185, 129, 0.12);
+}
+
+.rib {
+  border: 2px solid rgba(52, 211, 153, 0.75);
+  border-bottom: none;
+}
+
+.endWall {
+  border: 2px solid rgba(52, 211, 153, 0.9);
+  border-bottom: none;
+  background:
+    linear-gradient(90deg, rgba(16, 185, 129, 0.14) 1px, transparent 1px) 0 0 / 30px 100%,
+    rgba(16, 185, 129, 0.12);
+}
+
+.door {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 44px;
+  height: 78px;
+  margin-left: -22px;
+  border: 1.5px solid rgba(52, 211, 153, 0.9);
+  border-bottom: none;
+  background: rgba(5, 46, 31, 0.65);
+}
+
+.door::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-accent-bright);
+}
+
+.vent {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  width: 38px;
+  height: 24px;
+  margin-left: -19px;
+  border: 1.5px solid rgba(52, 211, 153, 0.8);
+  background: rgba(5, 46, 31, 0.4);
+}
+
+.hint {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.4);
+  color: #6b7280;
+  font-size: var(--text-xs);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 960px) {
+  .visual {
+    height: 360px;
+  }
+
+  .stage {
+    transform: scale(0.82);
+  }
+}
+
+@media (max-width: 480px) {
+  .visual {
+    height: 300px;
+  }
+
+  .stage {
+    transform: scale(0.66);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene {
+    animation: none;
+    transform: rotateX(-16deg) rotateY(-35deg);
+  }
+}

@@ -1,0 +1,64 @@
+name: Deploy dev
+
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-dev
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: dev
+      url: https://dev.bospur.ru
+    env:
+      DEPLOY_ROOT: /var/www/dev.bospur.ru
+      RELEASE: ${{ github.sha }}
+      KEEP_RELEASES: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: Upload release
+        run: |
+          rsync -az --delete apps/web/dist/ \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_ROOT/releases/$RELEASE/"
+
+      - name: Switch current and prune old releases
+        run: |
+          ssh "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" bash -s <<EOF
+          set -euo pipefail
+          cd "$DEPLOY_ROOT"
+          ln -sfn "releases/$RELEASE" current.tmp
+          mv -Tf current.tmp current
+          cd releases
+          ls -1t | tail -n +$((KEEP_RELEASES + 1)) | xargs -r rm -rf
+          EOF
+
+      - name: Smoke check
+        run: |
+          curl -fsS -u "${{ secrets.BASIC_AUTH }}" -o /dev/null https://dev.bospur.ru/
+          curl -fsS -u "${{ secrets.BASIC_AUTH }}" -o /dev/null https://dev.bospur.ru/catalog/klassik-3x4

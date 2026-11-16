@@ -1,0 +1,55 @@
+.top {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 48px;
+  align-items: start;
+  margin-bottom: 48px;
+}
+
+.state {
+  padding-block: 64px;
+}
+
+.skeletonCrumbs {
+  margin-block: 22px 20px;
+}
+
+.skeletonThumbs {
+  margin-top: 12px;
+}
+
+.skeletonInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.notFound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-block: 56px 96px;
+  text-align: center;
+}
+
+.notFoundArt {
+  width: 260px;
+  height: 170px;
+  margin-bottom: 8px;
+  opacity: 0.55;
+  filter: grayscale(0.4);
+}
+
+.notFoundActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+@media (max-width: 900px) {
+  .top {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}

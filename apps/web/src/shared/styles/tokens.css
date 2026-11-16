@@ -1,0 +1,70 @@
+:root {
+  /* brand */
+  --color-accent: #059669;
+  --color-accent-hover: #047857;
+  --color-accent-bright: #10b981;
+  --color-accent-soft: #ecfdf5;
+  --color-accent-border: #a7f3d0;
+  --color-on-accent: #ffffff;
+
+  /* surfaces & text (light) */
+  --color-bg: #f9fafb;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f3f4f6;
+  --color-border: #e5e7eb;
+  --color-border-strong: #d1d5db;
+  --color-text: #1f2937;
+  --color-text-muted: #6b7280;
+  --color-text-subtle: #9ca3af;
+  --color-danger: #dc2626;
+
+  /* dark sections (hero, footer) */
+  --color-dark-bg: #0a0f0d;
+  --color-dark-surface: #0f1a15;
+  --color-dark-border: rgba(255, 255, 255, 0.08);
+  --color-dark-text: #e5e7eb;
+  --color-dark-text-muted: #9ca3af;
+
+  /* typography */
+  --font-body: 'Inter Variable', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Manrope', 'Inter Variable', system-ui, sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: clamp(1.6rem, 3vw, 2.2rem);
+  --text-hero: clamp(2rem, 4.5vw, 3.4rem);
+
+  /* spacing & shape */
+  --container-width: 1240px;
+  --container-padding: 24px;
+  --header-height: 68px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 12px 28px -8px rgba(0, 0, 0, 0.15);
+  --shadow-accent: 0 8px 24px -6px rgba(16, 185, 129, 0.5);
+  --focus-ring: 0 0 0 3px rgba(5, 150, 105, 0.2);
+
+  --transition: 0.2s ease;
+}
+
+[data-theme='dark'] {
+  --color-bg: #0a0f0d;
+  --color-surface: rgba(255, 255, 255, 0.025);
+  --color-surface-muted: rgba(255, 255, 255, 0.04);
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-border-strong: rgba(255, 255, 255, 0.12);
+  --color-text: #e5e7eb;
+  --color-text-muted: #9ca3af;
+  --color-text-subtle: #6b7280;
+  --color-accent: #10b981;
+  --color-accent-hover: #34d399;
+  --color-accent-soft: rgba(16, 185, 129, 0.1);
+  --color-accent-border: rgba(16, 185, 129, 0.25);
+  --color-on-accent: #052e1f;
+}

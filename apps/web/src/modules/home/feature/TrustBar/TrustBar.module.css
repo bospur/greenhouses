@@ -1,0 +1,32 @@
+.bar {
+  padding: 18px 0;
+  border-top: 1px solid var(--color-dark-border);
+  background: #0d1411;
+  color: var(--color-dark-text-muted);
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 44px;
+  list-style: none;
+  font-size: var(--text-sm);
+}
+
+.list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.check {
+  color: var(--color-accent-bright);
+}
+
+@media (max-width: 600px) {
+  .list {
+    justify-content: flex-start;
+    gap: 10px 20px;
+  }
+}

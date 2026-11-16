@@ -1,0 +1,219 @@
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.disabled {
+  opacity: 0.45;
+  cursor: not-allowed !important;
+}
+
+/* chips */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  position: relative;
+  padding: 7px 14px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+}
+
+.chip:hover:not(.disabled) {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.chip:has(:focus-visible),
+.card:has(:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.chipActive,
+.chipActive:hover:not(.disabled) {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* option cards */
+.shapeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+}
+
+.cardList {
+  display: grid;
+  gap: 8px;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    background var(--transition),
+    box-shadow var(--transition);
+}
+
+.card:hover:not(.disabled) {
+  border-color: var(--color-accent-border);
+}
+
+.cardActive,
+.cardActive:hover:not(.disabled) {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.cardMedia {
+  display: block;
+  padding: 4px 8px 0;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--color-border-strong);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-on-accent);
+  transition:
+    background var(--transition),
+    border-color var(--transition);
+}
+
+.markSquare {
+  border-radius: 5px;
+}
+
+.cardActive .mark {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+
+.cardTitle {
+  font-weight: 600;
+  font-size: var(--text-sm);
+}
+
+.cardMeta {
+  margin-left: auto;
+  padding-left: 8px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+.cardDescription {
+  padding-left: 26px;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* layout helpers */
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 22px;
+}
+
+.range {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 42px;
+}
+
+.range input {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.rangeValue {
+  min-width: 56px;
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .shapeGrid {
+    gap: 8px;
+  }
+
+  .shapeGrid .card {
+    padding: 10px 8px;
+  }
+
+  .shapeGrid .cardDescription {
+    display: none;
+  }
+
+  .shapeGrid .cardMedia {
+    padding: 0;
+  }
+
+  .shapeGrid .mark {
+    display: none;
+  }
+
+  .shapeGrid .cardHead {
+    justify-content: center;
+  }
+
+  .shapeGrid .cardTitle {
+    font-size: 0.72rem;
+  }
+}

@@ -1,0 +1,47 @@
+.section {
+  padding: 0 0 96px;
+}
+
+.banner {
+  position: relative;
+  overflow: hidden;
+  padding: 56px 40px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+  color: #fff;
+  text-align: center;
+}
+
+.blueprint {
+  position: absolute;
+  right: -40px;
+  bottom: -20px;
+  width: 420px;
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 2;
+  pointer-events: none;
+}
+
+.banner h2 {
+  position: relative;
+  margin-bottom: 12px;
+  font-size: var(--text-2xl);
+}
+
+.banner p {
+  position: relative;
+  max-width: 520px;
+  margin: 0 auto 28px;
+  opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+  .banner {
+    padding: 40px 20px;
+  }
+
+  .blueprint {
+    width: 280px;
+  }
+}

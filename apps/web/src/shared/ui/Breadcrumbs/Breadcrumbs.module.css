@@ -1,0 +1,28 @@
+.nav {
+  padding-block: 20px 18px;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+}
+
+.sep {
+  color: var(--color-text-subtle);
+}
+
+.link {
+  transition: color var(--transition);
+}
+
+.link:hover {
+  color: var(--color-accent);
+}
+
+.current {
+  color: var(--color-text);
+}
